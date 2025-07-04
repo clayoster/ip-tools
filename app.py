@@ -27,7 +27,7 @@ def healthcheck():
     return "healthy"
 
 @app.route("/")
-def icanhazafunction():
+def main():
     # Set default mimetype
     mimetype = "text/plain"
 
@@ -73,7 +73,7 @@ def icanhazafunction():
         except:
             result = request.remote_addr
     else:
-        # The request is for *.icanhazip.com or something we don't recognize
+        # The request is for something we don't recognize
         result = request.remote_addr
     return Response("%s\n" % result, mimetype=mimetype, headers={"X-Your-Ip": request.remote_addr})
 
