@@ -22,6 +22,9 @@ from flask import Flask, Response, request, send_from_directory
 
 app = Flask(__name__, static_folder='static')
 
+@app.route('/health')
+def healthcheck():
+    return "healthy"
 
 @app.route("/")
 def icanhazafunction():
