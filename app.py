@@ -22,6 +22,14 @@ from flask import Flask, Response, request, send_from_directory
 
 app = Flask(__name__, static_folder='static')
 
+def find_remote_addr(request):
+    # Determine the correct IP address of the requester
+    if request.headers.get('CF-Connecting-IP'):
+        return request.headers.get('CF-Connecting-IP')
+    if request.headers.get('X-Forwarded-For'):
+        return request.headers.get('X-Forwarded-For')
+    return request.remote_addr
+
 @app.route('/health')
 def healthcheck():
     return "healthy"
@@ -31,9 +39,12 @@ def main():
     # Set default mimetype
     mimetype = "text/plain"
 
+    # Determine remote address from request
+    remote_addr = find_remote_addr(request)
+
     if 'ip.' in request.host:
         # The request is for ip.domain.com
-        result = request.remote_addr
+        result = remote_addr
     elif 'epoch.' in request.host:
         # The request is for epoch.domain.com
         epoch_time = int(time.time())
@@ -68,14 +79,14 @@ def main():
     elif 'ptr.' in request.host:
         # The request is for ptr.domain.com
         try:
-            output = socket.gethostbyaddr(request.remote_addr)
+            output = socket.gethostbyaddr(remote_addr)
             result = output[0]
         except:
-            result = request.remote_addr
+            result = remote_addr
     else:
         # The request is for something we don't recognize
-        result = request.remote_addr
-    return Response("%s\n" % result, mimetype=mimetype, headers={"X-Your-Ip": request.remote_addr})
+        result = remote_addr
+    return Response("%s\n" % result, mimetype=mimetype, headers={"X-Your-Ip": remote_addr})
 
 @app.route('/robots.txt')
 def static_from_root():
