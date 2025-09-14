@@ -28,7 +28,7 @@ app = Flask(__name__, static_folder='static')
 # Check for ENABLE_PROXY_HEADERS environment variable
 ENABLE_PROXY_HEADERS = os.environ.get('ENABLE_PROXY_HEADERS', 'false')
 
-def find_remote_addr(request):
+def find_remote_addr():
     """ Determine the correct IP address of the requester """
     if request.headers.get('CF-Connecting-IP'):
         return request.headers.get('CF-Connecting-IP')
@@ -48,7 +48,7 @@ def main():
     mimetype = "text/plain"
 
     # Determine remote address from request
-    remote_addr = find_remote_addr(request)
+    remote_addr = find_remote_addr()
 
     if request.host.startswith('ip.'):
         # The request is for ip.domain.com

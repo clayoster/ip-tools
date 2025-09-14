@@ -8,6 +8,22 @@ def test_ip_route(app, client):
     assert re.search('[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}', str(res.data))
     assert res.status_code == 200
 
+# Confirm that the CF-Connecting-IP header is used when present
+def test_ip_route_cf_header(app, client):
+    res = client.get(
+        '/',
+        headers={'Host': 'ip.example.com', 'CF-Connecting-IP': '123.123.123.123'})
+    assert b'123.123.123.123' in res.data
+    assert res.status_code == 200
+
+# Confirm that the X-Forwarded-For header is used when present
+def test_ip_route_xforward_header(app, client):
+    res = client.get(
+        '/',
+        headers={'Host': 'ip.example.com', 'X-Forwarded-For': '124.124.124.124'})
+    assert b'124.124.124.124' in res.data
+    assert res.status_code == 200
+
 # Confirm that 'localhost' is in the response for 'ptr'
 def test_ptr_route(app, client):
     res = client.get(
