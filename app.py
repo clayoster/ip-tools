@@ -90,12 +90,12 @@ def main():
         try:
             output = socket.gethostbyaddr(remote_addr)
             result = output[0]
-        except:
+        except: # pylint: disable=bare-except
             result = remote_addr
     else:
         # The request is for something we don't recognize
         result = remote_addr
-    return Response("%s\n" % result, mimetype=mimetype, headers={"X-Your-Ip": remote_addr})
+    return Response(f"{result}\n", mimetype=mimetype, headers={"X-Your-Ip": remote_addr})
 
 @app.route('/robots.txt')
 def static_from_root():
