@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" ip-tools - A simple web app to return ip/ptr/headers requester """
+""" ip-tools - A simple web app to return the ip/ptr/headers of the requester """
 
 # Copyright 2014 Major Hayden
 #
