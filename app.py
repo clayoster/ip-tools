@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-#
+
+""" ip-tools - A simple web app to return ip/ptr/headers requester """
+
 # Copyright 2014 Major Hayden
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +29,7 @@ app = Flask(__name__, static_folder='static')
 ENABLE_PROXY_HEADERS = os.environ.get('ENABLE_PROXY_HEADERS', 'false')
 
 def find_remote_addr(request):
-    # Determine the correct IP address of the requester
+    """ Determine the correct IP address of the requester """
     if request.headers.get('CF-Connecting-IP'):
         return request.headers.get('CF-Connecting-IP')
     if request.headers.get('X-Forwarded-For'):
@@ -36,10 +38,12 @@ def find_remote_addr(request):
 
 @app.route('/health')
 def healthcheck():
+    """ Healthcheck Route"""
     return "healthy"
 
 @app.route("/")
 def main():
+    """ Main Route - Determine what to return based on hostname """
     # Set default mimetype
     mimetype = "text/plain"
 
@@ -57,7 +61,8 @@ def main():
         # The request is for headers.domain.com
         mimetype = "application/json"
         result = json.dumps(dict(request.headers))
-    elif request.host.startswith('proxy-headers.') and ENABLE_PROXY_HEADERS.lower() in ('true', '1', 'yes'):
+    elif request.host.startswith('proxy-headers.') \
+        and ENABLE_PROXY_HEADERS.lower() in ('true', '1', 'yes'):
         # The request is for proxy.domain.com
         proxy_headers = [
             'via',
@@ -94,6 +99,7 @@ def main():
 
 @app.route('/robots.txt')
 def static_from_root():
+    """ Serve robots.txt to prevent indexing """
     return send_from_directory(app.static_folder, request.path[1:])
 
 if __name__ == '__main__':
