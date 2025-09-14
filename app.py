@@ -42,18 +42,18 @@ def main():
     # Determine remote address from request
     remote_addr = find_remote_addr(request)
 
-    if 'ip.' in request.host:
+    if request.host.startswith('ip.'):
         # The request is for ip.domain.com
         result = remote_addr
-    elif 'epoch.' in request.host:
+    elif request.host.startswith('epoch.'):
         # The request is for epoch.domain.com
         epoch_time = int(time.time())
         result = epoch_time
-    elif 'headers.' in request.host:
+    elif request.host.startswith('headers.'):
         # The request is for headers.domain.com
         mimetype = "application/json"
         result = json.dumps(dict(request.headers))
-    elif 'proxy-headers.' in request.host:
+    elif request.host.startswith('proxy-headers.'):
         # The request is for proxy.domain.com
         proxy_headers = [
             'via',
@@ -76,7 +76,7 @@ def main():
             result = json.dumps(found_headers)
         else:
             return Response(""), 204
-    elif 'ptr.' in request.host:
+    elif request.host.startswith('ptr.'):
         # The request is for ptr.domain.com
         try:
             output = socket.gethostbyaddr(remote_addr)
