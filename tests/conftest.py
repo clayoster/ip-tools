@@ -1,4 +1,8 @@
 import pytest
+import os
+
+# Set Environment Variable
+os.environ["ENABLE_PROXY_HEADERS"] = 'true'
 
 from app import app as flask_app
 

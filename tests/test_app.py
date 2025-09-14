@@ -34,6 +34,16 @@ def test_headers_route(app, client):
     assert res.is_json, "Response was not JSON"
     assert res.status_code == 200
 
+# Confirm proxy-headers route works when enabled. This will have an empty response in tests
+def test_proxy_headers_route_enabled(app, client):
+    res = client.get(
+        '/',
+        headers={'Host': 'proxy-headers.example.com'})
+    import os
+    assert os.getenv("ENABLE_PROXY_HEADERS") == "true"
+    assert b'' in res.data
+    assert res.status_code == 204
+
 # Confirm that heathcheck is successful
 def test_robots_route(app, client):
     res = client.get('/robots.txt')

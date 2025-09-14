@@ -15,12 +15,16 @@
 #   limitations under the License.
 
 import json
+import os
 import socket
 import time
 
 from flask import Flask, Response, request, send_from_directory
 
 app = Flask(__name__, static_folder='static')
+
+# Check for ENABLE_PROXY_HEADERS environment variable
+ENABLE_PROXY_HEADERS = os.environ.get('ENABLE_PROXY_HEADERS', 'false')
 
 def find_remote_addr(request):
     # Determine the correct IP address of the requester
@@ -53,7 +57,7 @@ def main():
         # The request is for headers.domain.com
         mimetype = "application/json"
         result = json.dumps(dict(request.headers))
-    elif request.host.startswith('proxy-headers.'):
+    elif request.host.startswith('proxy-headers.') and ENABLE_PROXY_HEADERS.lower() in ('true', '1', 'yes'):
         # The request is for proxy.domain.com
         proxy_headers = [
             'via',
