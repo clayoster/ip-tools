@@ -25,8 +25,8 @@ from flask import Flask, Response, request, send_from_directory
 
 app = Flask(__name__, static_folder='static')
 
-# Check for ENABLE_PROXY_HEADERS environment variable
-ENABLE_PROXY_HEADERS = os.environ.get('ENABLE_PROXY_HEADERS', 'false')
+# Check for ENABLE_HEADERS environment variable
+ENABLE_HEADERS = os.environ.get('ENABLE_HEADERS', 'false')
 
 def find_remote_addr():
     """ Determine the correct IP address of the requester """
@@ -57,12 +57,13 @@ def main():
         # The request is for epoch.domain.com
         epoch_time = int(time.time())
         result = epoch_time
-    elif request.host.startswith('headers.'):
+    elif request.host.startswith('headers.') \
+        and ENABLE_HEADERS.lower() in ('true', '1', 'yes'):
         # The request is for headers.domain.com
         mimetype = "application/json"
         result = json.dumps(dict(request.headers))
     elif request.host.startswith('proxy-headers.') \
-        and ENABLE_PROXY_HEADERS.lower() in ('true', '1', 'yes'):
+        and ENABLE_HEADERS.lower() in ('true', '1', 'yes'):
         # The request is for proxy.domain.com
         proxy_headers = [
             'via',

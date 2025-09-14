@@ -9,6 +9,8 @@ This web app will respond with different information based on the subdomain of t
   * Provides the current epoch time
 * headers.example.com
   * Outputs the headers that were received with the request
+  * Must be enabled by setting an environment variable of ENABLE_PROXY_HEADERS=true
+    * If the application is facing the internet, this can expose sensitive information
 * proxy-headers.example.com
   * Outputs the proxy headers that were received with the request
   * Must be enabled by setting an environment variable of ENABLE_PROXY_HEADERS=true

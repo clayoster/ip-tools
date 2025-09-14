@@ -46,6 +46,8 @@ def test_headers_route(app, client):
     res = client.get(
         '/',
         headers={'Host': 'headers.example.com'})
+    import os
+    assert os.getenv("ENABLE_HEADERS") == "true"
     assert b'"Host": "headers.example.com"' in res.data
     assert res.is_json, "Response was not JSON"
     assert res.status_code == 200
@@ -56,7 +58,7 @@ def test_proxy_headers_route_enabled(app, client):
         '/',
         headers={'Host': 'proxy-headers.example.com'})
     import os
-    assert os.getenv("ENABLE_PROXY_HEADERS") == "true"
+    assert os.getenv("ENABLE_HEADERS") == "true"
     assert b'' in res.data
     assert res.status_code == 204
 
