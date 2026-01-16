@@ -59,18 +59,18 @@ spec:
         app: ip-tools
     spec:
       containers:
-      - name: ip-tools
-        image: ghcr.io/clayoster/ip-tools:latest
-        # Enable to allow headers.* and proxy-headers.* to work. Disabled by default
-        # to avoid exposing internal infrastructure bread crumbs by accident.
-        env:
-          - name: ENABLE_HEADERS
-            value: "false"
-        ports:
-          - containerPort: 8080
-            name: 8080tcp
-            protocol: TCP
-        resources: {}
+        - name: ip-tools
+          image: ghcr.io/clayoster/ip-tools:latest
+          # Enable to allow headers.* and proxy-headers.* to work. Disabled by default
+          # to avoid exposing internal infrastructure bread crumbs by accident.
+          env:
+            - name: ENABLE_HEADERS
+              value: "false"
+          ports:
+            - containerPort: 8080
+              name: 8080tcp
+              protocol: TCP
+          resources: {}
 ---
 apiVersion: v1
 kind: Service
@@ -95,9 +95,9 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - match: Host(`ip.example.com`) || Host(`epoch.example.com`) || Host(`headers.example.com`) || Host(`proxy-headers.example.com`)|| Host(`ptr.example.com`)
-    kind: Rule
-    services:
-    - name: ip-tools
-      port: 80
+    - match: Host(`ip.example.com`) || Host(`epoch.example.com`) || Host(`headers.example.com`) || Host(`proxy-headers.example.com`)|| Host(`ptr.example.com`)
+      kind: Rule
+      services:
+        - name: ip-tools
+          port: 80
 ```
